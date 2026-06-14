@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TimeWarden — Settings</title>
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>TimeWarden</h1>
+      <p class="muted">Daily time limits for websites.</p>
+    </header>
+
+    <section class="card">
+      <h2>Add a limit</h2>
+      <form id="add-form" class="add-row">
+        <input id="add-domain" type="text" placeholder="example.com" autocomplete="off" spellcheck="false" />
+        <input id="add-minutes" type="number" min="1" max="1440" placeholder="min" />
+        <button type="submit" class="primary">Add</button>
+      </form>
+      <p id="add-error" class="error hidden"></p>
+    </section>
+
+    <section class="card">
+      <h2>Limited sites</h2>
+      <table id="table" class="table hidden">
+        <thead>
+          <tr><th>Site</th><th>Today</th><th>Limit (min)</th><th></th></tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <p id="empty" class="muted">No limits yet.</p>
+    </section>
+
+    <section class="card">
+      <h2>Settings</h2>
+      <label class="setting">
+        <input type="checkbox" id="track-idle" />
+        <span>
+          Keep counting while I'm idle
+          <small class="muted">Off by default — time only counts while you're actively using the focused tab.</small>
+        </span>
+      </label>
+      <label class="setting">
+        <span>Idle after
+          <input type="number" id="idle-seconds" min="15" max="3600" class="inline-num" /> seconds
+        </span>
+      </label>
+    </section>
+
+    <footer class="muted">Usage history is kept for 7 days and never leaves your browser.</footer>
+  </div>
+
+  <script src="store.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

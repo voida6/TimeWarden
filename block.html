@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Time's up — TimeWarden</title>
+  <link rel="stylesheet" href="block.css" />
+</head>
+<body>
+  <main class="card">
+    <div class="glyph">⏳</div>
+    <h1>Time's up for today</h1>
+    <p class="domain" id="domain">this site</p>
+    <p class="sub" id="sub"></p>
+
+    <div class="actions">
+      <button id="back" class="primary">Close this tab</button>
+      <button id="snooze" class="ghost">Give me 5 more minutes</button>
+    </div>
+    <p class="fine muted">Limits reset at midnight. Edit them from the TimeWarden popup.</p>
+  </main>
+
+  <script src="store.js"></script>
+  <script src="block.js"></script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header>
+    <h1>TimeWarden</h1>
+    <span id="today" class="muted"></span>
+  </header>
+
+  <section id="current" class="card">
+    <div class="site-row">
+      <span id="site" class="site">—</span>
+      <span id="used" class="used muted"></span>
+    </div>
+    <div id="bar" class="bar hidden"><div id="fill" class="fill"></div></div>
+
+    <div class="limit-row">
+      <label for="limit">Daily limit</label>
+      <div class="limit-input">
+        <input id="limit" type="number" min="1" max="1440" inputmode="numeric" placeholder="—" />
+        <span class="suffix">min</span>
+      </div>
+      <button id="save" class="primary">Set</button>
+      <button id="remove" class="ghost hidden">Remove</button>
+    </div>
+    <p id="hint" class="hint muted"></p>
+  </section>
+
+  <section id="list-section">
+    <h2>Limited sites</h2>
+    <ul id="list" class="list"></ul>
+    <p id="empty" class="muted hidden">No limits yet. Set one for the site above.</p>
+  </section>
+
+  <footer>
+    <button id="options" class="link">Manage all &amp; settings</button>
+  </footer>
+
+  <script src="store.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

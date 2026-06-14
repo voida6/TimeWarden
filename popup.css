@@ -1,0 +1,218 @@
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --text: #1a1d21;
+  --muted: #6b7280;
+  --accent: #4285f4;
+  --accent-weak: #e8f0fe;
+  --border: #e2e5ea;
+  --danger: #d93025;
+  --ok: #1e8e3e;
+  --warn: #f9ab00;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1f2227;
+    --surface: #2a2e35;
+    --text: #e6e9ee;
+    --muted: #9aa3b0;
+    --accent: #8ab4f8;
+    --accent-weak: #2d3748;
+    --border: #3a3f48;
+    --danger: #f28b82;
+    --ok: #81c995;
+    --warn: #fdd663;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  width: 320px;
+  margin: 0;
+  padding: 14px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--bg);
+}
+
+header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+h1 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.2px;
+}
+
+h2 {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--muted);
+  margin: 0 0 8px;
+}
+
+.muted { color: var(--muted); font-size: 12px; }
+.hidden { display: none !important; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 14px;
+}
+
+.site-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.site {
+  font-weight: 600;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.used { white-space: nowrap; }
+
+.bar {
+  height: 6px;
+  background: var(--accent-weak);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.fill {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  border-radius: 999px;
+  transition: width 0.25s ease;
+}
+
+.limit-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.limit-row label { font-size: 12px; color: var(--muted); flex: 0 0 auto; }
+
+.limit-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+}
+
+.limit-input input {
+  width: 100%;
+  padding: 6px 34px 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+}
+
+.limit-input .suffix {
+  position: absolute;
+  right: 8px;
+  color: var(--muted);
+  font-size: 11px;
+  pointer-events: none;
+}
+
+button {
+  font-family: inherit;
+  font-size: 12px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+button.primary { background: var(--accent); color: #fff; }
+button.primary:hover { filter: brightness(1.05); }
+
+button.ghost {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--muted);
+}
+button.ghost:hover { color: var(--danger); border-color: var(--danger); }
+
+button.link {
+  background: none;
+  border: none;
+  color: var(--accent);
+  padding: 4px;
+  font-size: 12px;
+}
+button.link:hover { text-decoration: underline; }
+
+.hint { margin: 8px 0 0; min-height: 14px; }
+
+.list { list-style: none; margin: 0; padding: 0; }
+
+.list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.list li:last-child { border-bottom: none; }
+
+.li-main { flex: 1 1 auto; min-width: 0; }
+
+.li-domain {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.li-bar {
+  height: 4px;
+  background: var(--accent-weak);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 5px;
+}
+.li-fill { height: 100%; background: var(--accent); border-radius: 999px; }
+.li-fill.over { background: var(--danger); }
+
+.li-meta { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+.li-remove {
+  flex: 0 0 auto;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1;
+  padding: 2px 6px;
+}
+.li-remove:hover { color: var(--danger); }
+
+footer {
+  margin-top: 12px;
+  text-align: center;
+}
