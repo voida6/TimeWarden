@@ -10,36 +10,51 @@
   <div class="wrap">
     <header>
       <h1>TimeWarden</h1>
-      <p class="muted">Daily time limits for websites.</p>
+      <p class="muted">Daily time limits, focus hours and allowed-time windows for websites.</p>
     </header>
 
     <section class="card">
-      <h2>Add a limit</h2>
+      <h2>Add a site</h2>
       <form id="add-form" class="add-row">
         <input id="add-domain" type="text" placeholder="example.com" autocomplete="off" spellcheck="false" />
-        <input id="add-minutes" type="number" min="1" max="1440" placeholder="min" />
+        <input id="add-minutes" type="number" min="1" max="1440" placeholder="min (optional)" />
         <button type="submit" class="primary">Add</button>
       </form>
       <p id="add-error" class="error hidden"></p>
+      <p class="muted small">Add a site to give it a daily limit, allowed hours, or both.</p>
     </section>
 
     <section class="card">
-      <h2>Limited sites</h2>
-      <table id="table" class="table hidden">
-        <thead>
-          <tr><th>Site</th><th>Today</th><th>Limit (min)</th><th></th></tr>
-        </thead>
-        <tbody id="rows"></tbody>
-      </table>
-      <p id="empty" class="muted">No limits yet.</p>
+      <h2>Focus hours</h2>
+      <label class="setting">
+        <input type="checkbox" id="focus-enabled" />
+        <span>Block all your limited sites during set hours
+          <small class="muted">Great for work blocks — limited sites are off-limits regardless of time used.</small>
+        </span>
+      </label>
+      <div id="focus-fields" class="schedule">
+        <label class="time">From <input type="time" id="focus-start" /></label>
+        <label class="time">to <input type="time" id="focus-end" /></label>
+        <div class="days" id="focus-days"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Last 7 days</h2>
+      <div id="chart" class="chart"></div>
+    </section>
+
+    <section class="card">
+      <h2>Managed sites</h2>
+      <div id="sites"></div>
+      <p id="empty" class="muted">No sites yet — add one above.</p>
     </section>
 
     <section class="card">
       <h2>Settings</h2>
       <label class="setting">
         <input type="checkbox" id="track-idle" />
-        <span>
-          Keep counting while I'm idle
+        <span>Keep counting while I'm idle
           <small class="muted">Off by default — time only counts while you're actively using the focused tab.</small>
         </span>
       </label>

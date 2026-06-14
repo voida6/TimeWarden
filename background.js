@@ -67,7 +67,7 @@ async function runTick() {
       await addUsage(session.domain, elapsed);
     }
     const status = await getStatus(session.domain);
-    if (status.blocked) await blockDomain(session.domain);
+    if (status.blocked) await blockDomain(session.domain, status.reason);
   }
 
   // 2. What is the user actually looking at right now?
@@ -78,7 +78,7 @@ async function runTick() {
   if (activeDomain) {
     const status = await getStatus(activeDomain);
     if (status.blocked) {
-      await blockDomain(activeDomain);
+      await blockDomain(activeDomain, status.reason);
     } else {
       next = { domain: activeDomain, startedAt: now };
     }
@@ -114,12 +114,13 @@ async function addUsage(domain, seconds) {
 }
 
 // Redirect every open tab sitting on this domain to the block page.
-async function blockDomain(domain) {
+async function blockDomain(domain, reason = "limit") {
   const blockBase = chrome.runtime.getURL("block.html");
   const tabs = await chrome.tabs.query({});
   for (const tab of tabs) {
     if (domainFromUrl(tab.url) === domain) {
       const url = `${blockBase}?domain=${encodeURIComponent(domain)}` +
+        `&reason=${encodeURIComponent(reason)}` +
         `&from=${encodeURIComponent(tab.url)}`;
       chrome.tabs.update(tab.id, { url }).catch(() => {});
     }

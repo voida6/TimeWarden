@@ -43,17 +43,36 @@ async function renderCurrent() {
     $("bar").classList.remove("hidden");
     $("fill").style.width = pct + "%";
     $("fill").style.background = status.blocked ? "var(--danger)" : "var(--accent)";
-    const remaining = Math.max(0, status.effectiveSeconds - status.used);
-    $("hint").textContent = status.blocked
-      ? "Limit reached for today."
-      : `${formatDuration(remaining)} left today` +
-        (status.bonusMinutes ? ` (incl. +${status.bonusMinutes}m snooze)` : "");
   } else {
     $("limit").value = "";
     $("remove").classList.add("hidden");
     $("bar").classList.add("hidden");
-    $("hint").textContent = "No limit set for this site.";
   }
+
+  $("hint").textContent = await hintFor(status);
+}
+
+// One-line status: blocking reason takes priority, then time remaining.
+async function hintFor(status) {
+  if (status.blocked) {
+    if (status.reason === "focus") {
+      const focus = await getFocus();
+      return `Blocked now — focus hours (${focus.start}–${focus.end}).`;
+    }
+    if (status.reason === "window") {
+      return status.window
+        ? `Blocked now — only allowed ${describeWindow(status.window)}.`
+        : "Blocked now — outside allowed hours.";
+    }
+    return "Limit reached for today.";
+  }
+  if (status.limited) {
+    const remaining = Math.max(0, status.effectiveSeconds - status.used);
+    return `${formatDuration(remaining)} left today` +
+      (status.bonusMinutes ? ` (incl. +${status.bonusMinutes}m snooze)` : "");
+  }
+  if (status.window) return `Allowed only ${describeWindow(status.window)}.`;
+  return "No limit set for this site.";
 }
 
 async function onSave() {
@@ -77,8 +96,7 @@ async function onRemove() {
 }
 
 async function renderList() {
-  const limits = await getLimits();
-  const domains = Object.keys(limits).sort();
+  const domains = await getManagedDomains();
   const ul = $("list");
   ul.innerHTML = "";
 
@@ -86,7 +104,6 @@ async function renderList() {
 
   for (const domain of domains) {
     const status = await getStatus(domain);
-    const pct = Math.min(100, (status.used / status.effectiveSeconds) * 100);
 
     const li = document.createElement("li");
 
@@ -96,28 +113,37 @@ async function renderList() {
     const name = document.createElement("div");
     name.className = "li-domain";
     name.textContent = domain;
+    main.appendChild(name);
 
-    const bar = document.createElement("div");
-    bar.className = "li-bar";
-    const fill = document.createElement("div");
-    fill.className = "li-fill" + (status.blocked ? " over" : "");
-    fill.style.width = pct + "%";
-    bar.appendChild(fill);
+    // Progress bar only makes sense for a minute limit.
+    if (status.limited) {
+      const pct = Math.min(100, (status.used / status.effectiveSeconds) * 100);
+      const bar = document.createElement("div");
+      bar.className = "li-bar";
+      const fill = document.createElement("div");
+      fill.className = "li-fill" + (status.blocked ? " over" : "");
+      fill.style.width = pct + "%";
+      bar.appendChild(fill);
+      main.appendChild(bar);
+    }
 
     const meta = document.createElement("div");
     meta.className = "li-meta";
-    meta.textContent =
-      `${formatDuration(status.used)} / ${status.limitMinutes}m` +
-      (status.blocked ? " · blocked" : "");
-
-    main.append(name, bar, meta);
+    const parts = [];
+    if (status.limited) parts.push(`${formatDuration(status.used)} / ${status.limitMinutes}m`);
+    else parts.push(formatDuration(status.used));
+    if (status.window) parts.push(describeWindow(status.window));
+    if (status.blocked) parts.push(status.reason === "focus" ? "focus" : "blocked");
+    meta.textContent = parts.join(" · ");
+    main.appendChild(meta);
 
     const remove = document.createElement("button");
     remove.className = "li-remove";
-    remove.title = "Remove limit";
+    remove.title = "Remove";
     remove.textContent = "×";
     remove.addEventListener("click", async () => {
       await setLimit(domain, 0);
+      await setWindow(domain, null);
       await renderList();
       if (domain === currentDomain) await renderCurrent();
     });

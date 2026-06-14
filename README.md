@@ -10,14 +10,17 @@ Everything runs locally — no accounts, no servers, no data leaves your browser
 
 - **Per-site daily limits**, set in minutes from the toolbar popup or the
   settings page.
+- **Focus hours** — block all your limited sites during a daily window (e.g.
+  9–5 on weekdays), regardless of time used.
+- **Allowed-time windows** — restrict a site to specific hours/days, so it's
+  only reachable when you've decided it should be.
 - **Accurate, idle-aware tracking** — time only counts while the tab is focused
   and you're actually at the keyboard (configurable).
-- **Automatic blocking** the moment a site reaches its limit, across every open
-  tab on that site.
-- **Snooze** — grant yourself 5 more minutes from the block page when you really
-  need it.
-- **At-a-glance progress** bars in the popup, plus a full table and 7-day usage
-  in settings.
+- **Automatic blocking** the moment a rule is hit, across every open tab on that
+  site, with a block page that explains *why*.
+- **Snooze** — grant yourself 5 more minutes from the block page when you've run
+  out of time (limit blocks only).
+- **7-day usage chart** plus per-site cards and progress bars.
 - Limits reset automatically at your local midnight.
 
 ## Install (developer mode)
@@ -39,16 +42,18 @@ Everything runs locally — no accounts, no servers, no data leaves your browser
 The service worker (`background.js`) tracks time using wall-clock timestamps
 rather than counting ticks, so it stays accurate even when Chrome suspends the
 worker. A once-a-minute heartbeat — plus tab, focus and idle events — banks the
-elapsed time for the active site and blocks it if it's over budget.
+elapsed time for the active site and re-checks every rule (limit, focus hours,
+allowed window), blocking the site if any of them say so. Because the heartbeat
+runs every minute, time-based rules kick in even while you sit idle on a page.
 
 | File | Role |
 |------|------|
 | `manifest.json` | MV3 manifest, permissions, popup/options registration |
-| `background.js` | Time tracking, limit checks, blocking |
-| `store.js` | Shared storage helpers (limits, usage, overrides, settings) |
+| `background.js` | Time tracking, rule checks, blocking |
+| `store.js` | Shared storage helpers (limits, windows, focus, usage, settings) |
 | `popup.*` | Toolbar popup — current site + quick limit + list |
-| `options.*` | Full management table and settings |
-| `block.*` | The "time's up" page with snooze |
+| `options.*` | Focus hours, 7-day chart, per-site cards, settings |
+| `block.*` | The block page (time's up / focus hours / outside hours) |
 
 ## Permissions
 
